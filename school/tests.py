@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from school.models import Lesson
+from school.models import Lesson, Course, Subscription
 from users.models import User
 
 
@@ -204,3 +204,68 @@ class SchoolTestCase(APITestCase):
             status.HTTP_204_NO_CONTENT
         )
 
+    def test_create_subscription(self):
+        """Создание подписки"""
+
+        self.client.force_authenticate(user=self.moderator)
+
+        course = Course.objects.create(
+            title='title',
+            owner=self.moderator
+        )
+
+        data = {
+            'user': self.moderator.id,
+            'course': course.id,
+            'is_active': True
+        }
+        response = self.client.post(
+            reverse("school:subscription_create"),
+            data=data
+        )
+
+        print(response.json())
+
+        self.assertEquals(
+            response.status_code,
+            status.HTTP_201_CREATED
+        )
+
+        self.assertEquals(
+            response.json(),
+            {
+                'pk': 1,
+                'user': self.moderator.id,
+                'course': 1,
+                'is_active': True
+            }
+        )
+
+        self.assertTrue(
+            Subscription.objects.all().exists()
+        )
+
+    def test_destroy_subscription(self):
+
+        """Удаление подписки"""
+
+        self.client.force_authenticate(user=self.moderator)
+
+        course = Course.objects.create(
+            title='title',
+            owner=self.moderator
+        )
+
+        subscription = Subscription.objects.create(
+            user=self.moderator,
+            course=course
+        )
+
+        response = self.client.delete(
+            reverse("school:subscription_destroy", kwargs={'pk': subscription.id})
+        )
+
+        self.assertEquals(
+            response.status_code,
+            status.HTTP_204_NO_CONTENT
+        )

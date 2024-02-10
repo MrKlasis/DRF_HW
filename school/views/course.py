@@ -1,19 +1,49 @@
-from rest_framework import viewsets
-from school.models import Course
-from school.seriallizers.course import CourseSerializer
-from school.permissions import IsOwner, IsModerator
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
+from school.models import Course
+from school.paginators import CoursePaginator
+from school.permissions import IsOwner, IsModerator
+from school.seriallizers.course import CourseSerializer
+from school.tasks import curse_update_message
 
-class CourseViewSet(viewsets.ModelViewSet):
+
+class CourseCreateAPIView(CreateAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        new_course = serializer.save()
+        new_course.owner = self.request.user
+        new_course.save()
 
-    def get_permissions(self):
-        if self.action in ['update', 'partial_update', 'destroy']:
-            self.permission_classes = [IsOwner | IsModerator]
-        return super().get_permissions()
+
+class CourseListAPIView(ListAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = CoursePaginator
+
+
+class CourseRetrieveAPIView(RetrieveAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    permission_classes = [IsOwner | IsModerator]
+
+
+class CourseUpdateAPIView(UpdateAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    permission_classes = [IsOwner | IsModerator]
+
+    def perform_update(self, serializer):
+        print('perform_update')
+        obj = serializer.save()
+        curse_update_message.delay(obj.id)
+
+
+class CourseDestroyAPIView(DestroyAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    permission_classes = [IsOwner]
