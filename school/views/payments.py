@@ -11,6 +11,7 @@ from school.service import product_create_stripe, price_create_stripe, session_c
 class PaymentCreateAPIView(CreateAPIView):
     queryset = Payments.objects.all()
     serializer_class = PaymentsSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         new_pay = serializer.save()
