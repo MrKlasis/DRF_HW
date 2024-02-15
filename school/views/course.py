@@ -1,6 +1,5 @@
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
-
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from school.models import Course
 from school.paginators import CoursePaginator
 from school.permissions import IsOwner, IsModerator
@@ -8,42 +7,23 @@ from school.seriallizers.course import CourseSerializer
 from school.tasks import curse_update_message
 
 
-class CourseCreateAPIView(CreateAPIView):
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
-
-    def perform_create(self, serializer):
-        new_course = serializer.save()
-        new_course.owner = self.request.user
-        new_course.save()
-
-
-class CourseListAPIView(ListAPIView):
+class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
-    pagination_class = CoursePaginator
 
-
-class CourseRetrieveAPIView(RetrieveAPIView):
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
-    permission_classes = [IsOwner | IsModerator]
-
-
-class CourseUpdateAPIView(UpdateAPIView):
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
-    permission_classes = [IsOwner | IsModerator]
+    def perform_create(self, serializer):
+        new_course = serializer.save(owner=self.request.user)
 
     def perform_update(self, serializer):
-        print('perform_update')
         obj = serializer.save()
         curse_update_message.delay(obj.id)
 
-
-class CourseDestroyAPIView(DestroyAPIView):
-    queryset = Course.objects.all()
-    serializer_class = CourseSerializer
-    permission_classes = [IsOwner]
+    def get_permissions(self):
+        if self.action == 'create':
+            permission_classes = [IsAuthenticated, IsOwner]
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            permission_classes = [IsOwner | IsModerator]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
