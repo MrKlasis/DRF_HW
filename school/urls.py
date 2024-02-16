@@ -8,11 +8,15 @@ from school.views.subscription import SubscriptionCreateAPIView, SubscriptionDes
 router = DefaultRouter()
 router.register(r'courses', CourseViewSet)
 
+lesson_patterns = [
+    path('list/', LessonListAPIView.as_view(), name='lesson_list'),
+    path('retrieve/<int:pk>/', LessonRetrieveAPIView.as_view(), name='lesson_retrieve'),
+    path('update/<int:pk>/', LessonUpdateAPIView.as_view(), name='lesson_update'),
+    path('destroy/<int:pk>/', LessonDestroyAPIView.as_view(), name='lesson_destroy'),
+]
+
 urlpatterns = [
-    path('lessons/list/', LessonListAPIView.as_view(), name='lesson_list'),
-    path('lessons/retrieve/<int:pk>/', LessonRetrieveAPIView.as_view(), name='lesson_retrieve'),
-    path('lessons/update/<int:pk>/', LessonUpdateAPIView.as_view(), name='lesson_update'),
-    path('lessons/destroy/<int:pk>/', LessonDestroyAPIView.as_view(), name='lesson_destroy'),
+    path('lessons/', include((lesson_patterns, 'school'), namespace='lessons')),
     path('', include(router.urls)),
     path('payment_list/', PaymentsListAPIView.as_view(), name='payment_list'),
     path('payment/', PaymentCreateAPIView.as_view(), name='payment'),
