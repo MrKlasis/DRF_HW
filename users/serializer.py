@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from school.seriallizers.payments import PaymentsSerializer
 from users.models import User
-from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import make_password
 
 
