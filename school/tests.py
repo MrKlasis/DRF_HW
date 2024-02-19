@@ -215,7 +215,7 @@ class SchoolTestCase(APITestCase):
         )
 
         data = {
-            'user': self.moderator.id,
+            'user': self.user_1.id,
             'course': course.id,
             'is_active': True
         }
@@ -223,8 +223,6 @@ class SchoolTestCase(APITestCase):
             reverse("school:subscription_create"),
             data=data
         )
-
-        print(response.json())
 
         self.assertEquals(
             response.status_code,
@@ -235,8 +233,8 @@ class SchoolTestCase(APITestCase):
             response.json(),
             {
                 'pk': 1,
-                'user': self.moderator.id,
-                'course': 1,
+                'user': self.user_1.id,
+                'course': course.id,
                 'is_active': True
             }
         )
