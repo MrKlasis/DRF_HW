@@ -34,7 +34,6 @@ class SchoolTestCase(APITestCase):
         self.user_1.save()
 
     def test_create_lesson(self):
-
         """Создание урока"""
 
         self.client.force_authenticate(user=self.user_1)
@@ -43,7 +42,7 @@ class SchoolTestCase(APITestCase):
             'title': 'create_lesson_test',
         }
         response = self.client.post(
-            reverse("school:lesson_create"),
+            reverse("lessons:lesson_create"),
             data=data
         )
 
@@ -70,7 +69,6 @@ class SchoolTestCase(APITestCase):
         )
 
     def test_list_lessons(self):
-
         """Вывод списка уроков"""
 
         self.client.force_authenticate(user=self.user_1)
@@ -80,7 +78,7 @@ class SchoolTestCase(APITestCase):
         )
 
         response = self.client.get(
-            reverse("school:lesson_list")
+            reverse("lessons:lesson_list")
         )
 
         self.assertEquals(
@@ -109,7 +107,6 @@ class SchoolTestCase(APITestCase):
         )
 
     def test_retrieve_lesson(self):
-
         """Вывод урока"""
 
         self.client.force_authenticate(user=self.user_1)
@@ -120,7 +117,7 @@ class SchoolTestCase(APITestCase):
         )
 
         response = self.client.get(
-            reverse("school:lesson_retrieve", kwargs={'pk': lesson.id})
+            reverse("lessons:lesson_retrieve", kwargs={'pk': lesson.id})
         )
 
         self.assertEquals(
@@ -142,7 +139,6 @@ class SchoolTestCase(APITestCase):
         )
 
     def test_update_lesson(self):
-
         """Редактирование урока"""
 
         self.client.force_authenticate(user=self.user_1)
@@ -157,7 +153,7 @@ class SchoolTestCase(APITestCase):
         }
 
         response = self.client.patch(
-            reverse("school:lesson_update", kwargs={'pk': lesson.id}),
+            reverse("lessons:lesson_update", kwargs={'pk': lesson.id}),
             data=data
 
         )
@@ -185,7 +181,6 @@ class SchoolTestCase(APITestCase):
         )
 
     def test_destroy_lesson(self):
-
         """Удаление урока"""
 
         self.client.force_authenticate(user=self.user_1)
@@ -196,7 +191,7 @@ class SchoolTestCase(APITestCase):
         )
 
         response = self.client.delete(
-            reverse("school:lesson_destroy", kwargs={'pk': lesson.id})
+            reverse("lessons:lesson_destroy", kwargs={'pk': lesson.id})
         )
 
         self.assertEquals(
@@ -244,7 +239,6 @@ class SchoolTestCase(APITestCase):
         )
 
     def test_destroy_subscription(self):
-
         """Удаление подписки"""
 
         self.client.force_authenticate(user=self.moderator)
