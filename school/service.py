@@ -34,3 +34,6 @@ def session_create_stripe(prod_price, count=1):
 # product_id = product_create_stripe(product_name)
 # price_id = price_create_stripe(product_id, product_price)
 # print(session_create_stripe(price_id))
+# product_id = product_create_stripe("Course")
+
+

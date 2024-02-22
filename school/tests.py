@@ -42,7 +42,7 @@ class SchoolTestCase(APITestCase):
             'title': 'create_lesson_test',
         }
         response = self.client.post(
-            reverse("lessons:lesson_create"),
+            reverse("school:lesson_create"),
             data=data
         )
 
@@ -78,7 +78,7 @@ class SchoolTestCase(APITestCase):
         )
 
         response = self.client.get(
-            reverse("lessons:lesson_list")
+            reverse("school:lesson_list")
         )
 
         self.assertEquals(
@@ -117,7 +117,7 @@ class SchoolTestCase(APITestCase):
         )
 
         response = self.client.get(
-            reverse("lessons:lesson_retrieve", kwargs={'pk': lesson.id})
+            reverse("school:lesson_retrieve", kwargs={'pk': lesson.id})
         )
 
         self.assertEquals(
@@ -153,7 +153,7 @@ class SchoolTestCase(APITestCase):
         }
 
         response = self.client.patch(
-            reverse("lessons:lesson_update", kwargs={'pk': lesson.id}),
+            reverse("school:lesson_update", kwargs={'pk': lesson.id}),
             data=data
 
         )
@@ -191,7 +191,7 @@ class SchoolTestCase(APITestCase):
         )
 
         response = self.client.delete(
-            reverse("lessons:lesson_destroy", kwargs={'pk': lesson.id})
+            reverse("school:lesson_destroy", kwargs={'pk': lesson.id})
         )
 
         self.assertEquals(
