@@ -60,7 +60,8 @@ class SchoolTestCase(APITestCase):
                 'video': None,
                 'description': None,
                 'course': None,
-                'owner': self.user_1.id
+                'owner': self.user_1.id,
+                'price': 0,
             }
         )
 
@@ -100,7 +101,8 @@ class SchoolTestCase(APITestCase):
                         'video': None,
                         'description': None,
                         'course': None,
-                        'owner': None
+                        'owner': None,
+                        'price': 0,
                     }
                 ]
             }
@@ -134,7 +136,8 @@ class SchoolTestCase(APITestCase):
                 'video': None,
                 'description': None,
                 'course': None,
-                'owner': self.user_1.id
+                'owner': self.user_1.id,
+                'price': 0,
             }
         )
 
@@ -172,7 +175,8 @@ class SchoolTestCase(APITestCase):
                 'video': None,
                 'description': None,
                 'course': None,
-                'owner': self.user_1.id
+                'owner': self.user_1.id,
+                'price': 0,
             }
         )
 
