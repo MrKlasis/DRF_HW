@@ -11,6 +11,7 @@ class Course(models.Model):
     description = models.TextField(**NULLABLE, verbose_name='Описание')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE, verbose_name='автор')
     price = models.PositiveIntegerField(default=0, verbose_name='цена')
+    stripe_product_id = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f'{self.title}'
@@ -28,6 +29,7 @@ class Lesson(models.Model):
     description = models.TextField(**NULLABLE, verbose_name='Описание')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE, verbose_name='автор')
     price = models.PositiveIntegerField(default=0, verbose_name='цена')
+    stripe_product_id = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f'{self.title}'

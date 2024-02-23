@@ -11,19 +11,23 @@ def product_create_stripe(prod_name):
 
 
 def price_create_stripe(prod_id, prod_price):
+
+    unit_amount = int(prod_price * 100)
+
     response = stripe.Price.create(
         currency="usd",
-        unit_amount=prod_price,
+        unit_amount=unit_amount,
         product=prod_id,
     )
     return response.get("id")
 
 
-def session_create_stripe(prod_price, count=1):
+def session_create_stripe(prod_price, count=1, success_url="https://example.com/success"):
     response = stripe.checkout.Session.create(
-      success_url="https://example.com/success",
-      line_items=[{"price": prod_price, "quantity": count}],
-      mode="payment",
+        success_url=success_url,
+        cancel_url="https://example.com/cancel",
+        line_items=[{"price": prod_price, "quantity": count}],
+        mode="payment",
     )
     return response.get("url")
 
