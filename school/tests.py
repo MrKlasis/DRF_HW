@@ -62,6 +62,7 @@ class SchoolTestCase(APITestCase):
                 'course': None,
                 'owner': self.user_1.id,
                 'price': 0,
+                'stripe_product_id': None,
             }
         )
 
@@ -103,6 +104,7 @@ class SchoolTestCase(APITestCase):
                         'course': None,
                         'owner': None,
                         'price': 0,
+                        'stripe_product_id': None,
                     }
                 ]
             }
@@ -138,6 +140,7 @@ class SchoolTestCase(APITestCase):
                 'course': None,
                 'owner': self.user_1.id,
                 'price': 0,
+                'stripe_product_id': None,
             }
         )
 
@@ -177,6 +180,7 @@ class SchoolTestCase(APITestCase):
                 'course': None,
                 'owner': self.user_1.id,
                 'price': 0,
+                'stripe_product_id': None,
             }
         )
 
