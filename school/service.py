@@ -29,15 +29,15 @@ def session_create_stripe(prod_price, count=1, success_url="https://example.com/
         line_items=[{"price": prod_price, "quantity": count}],
         mode="payment",
     )
-    return response.get("url")
+    return response
 
 
 # product_name = "Course"
 # product_price = 100
-#
 # product_id = product_create_stripe(product_name)
 # price_id = price_create_stripe(product_id, product_price)
-# print(session_create_stripe(price_id))
-# product_id = product_create_stripe("Course")
+# session_object = session_create_stripe(price_id)
+# stripe_session_id = session_object.get("id")
+# print("Stripe Session ID:", stripe_session_id)
 
 
