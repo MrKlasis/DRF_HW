@@ -9,7 +9,7 @@ from school.views.lesson import (
     LessonCreateAPIView,
 )
 from school.views.payments import PaymentsListAPIView, PaymentCreateAPIView, cancel_payment
-from school.views.subscription import SubscriptionCreateAPIView, SubscriptionDestroyAPIView
+from school.views.subscription import SubscriptionCreateDestroyAPIView
 from school.apps import SchoolConfig
 
 app_name = SchoolConfig.name
@@ -26,7 +26,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('payment_list/', PaymentsListAPIView.as_view(), name='payment_list'),
     path('payment/', PaymentCreateAPIView.as_view(), name='payment'),
-    path('subscription/create/', SubscriptionCreateAPIView.as_view(), name='subscription_create'),
-    path('subscription/destroy/<int:pk>/', SubscriptionDestroyAPIView.as_view(), name='subscription_destroy'),
+    path('subscription/<int:pk>/', SubscriptionCreateDestroyAPIView.as_view(), name='subscription_create_destroy'),
     path('cancel_payment/', cancel_payment, name='cancel_payment'),
 ]

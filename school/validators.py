@@ -5,6 +5,7 @@ class LessonVideoValidator:
 
     def __init__(self, field):
         self.field = field
+        self.__fields__ = [field]
 
     def __call__(self, value):
         reg = 'youtube.com'

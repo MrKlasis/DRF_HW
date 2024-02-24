@@ -207,33 +207,36 @@ class SchoolTestCase(APITestCase):
             status.HTTP_204_NO_CONTENT
         )
 
-    def test_create_subscription(self):
-        """Создание подписки"""
+    def test_create_and_destroy_subscription(self):
+        """Создание и удаление подписки"""
 
-        self.client.force_authenticate(user=self.moderator)
+        self.client.force_authenticate(user=self.user_1)
 
         course = Course.objects.create(
             title='title',
-            owner=self.moderator
+            owner=self.user_1
         )
 
-        data = {
+        # Создание подписки
+        data_create = {
+            'action': 'create',
             'user': self.user_1.id,
             'course': course.id,
             'is_active': True
         }
-        response = self.client.post(
-            reverse("school:subscription_create"),
-            data=data
+        response_create = self.client.post(
+            reverse("school:subscription_create_destroy", kwargs={'pk': 1}),
+            data=data_create,
+            format='json'
         )
 
         self.assertEquals(
-            response.status_code,
+            response_create.status_code,
             status.HTTP_201_CREATED
         )
 
         self.assertEquals(
-            response.json(),
+            response_create.json(),
             {
                 'pk': 1,
                 'user': self.user_1.id,
@@ -242,30 +245,14 @@ class SchoolTestCase(APITestCase):
             }
         )
 
-        self.assertTrue(
-            Subscription.objects.all().exists()
-        )
-
-    def test_destroy_subscription(self):
-        """Удаление подписки"""
-
-        self.client.force_authenticate(user=self.moderator)
-
-        course = Course.objects.create(
-            title='title',
-            owner=self.moderator
-        )
-
-        subscription = Subscription.objects.create(
-            user=self.moderator,
-            course=course
-        )
-
-        response = self.client.delete(
-            reverse("school:subscription_destroy", kwargs={'pk': subscription.id})
+        # Удаление подписки
+        subscription_id = response_create.json()['pk']
+        response_destroy = self.client.delete(
+            reverse("school:subscription_create_destroy", kwargs={'pk': subscription_id}),
+            format='json'
         )
 
         self.assertEquals(
-            response.status_code,
+            response_destroy.status_code,
             status.HTTP_204_NO_CONTENT
         )

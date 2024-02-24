@@ -2,17 +2,16 @@ from rest_framework.generics import CreateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from school.models import Subscription
-from school.permissions import IsModerator, IsOwner
 from school.seriallizers.subscription import SubscriptionSerializer
 
 
-class SubscriptionCreateAPIView(CreateAPIView):
+class SubscriptionCreateDestroyAPIView(CreateAPIView, DestroyAPIView):
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
-    permission_classes = [IsModerator]
+    permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save()
 
-class SubscriptionDestroyAPIView(DestroyAPIView):
-    queryset = Subscription.objects.all()
-    serializer_class = SubscriptionSerializer
-    permission_classes = [IsModerator]
+    def perform_destroy(self, instance):
+        instance.delete()
