@@ -11,9 +11,12 @@ class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = CoursePaginator
 
     def perform_create(self, serializer):
-        new_course = serializer.save(owner=self.request.user)
+        new_course = serializer.save()
+        new_course.owner = self.request.user
+        new_course.save()
 
     def perform_update(self, serializer):
         obj = serializer.save()
