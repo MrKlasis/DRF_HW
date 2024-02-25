@@ -33,6 +33,8 @@ class SchoolTestCase(APITestCase):
         self.user_1.set_password('test')
         self.user_1.save()
 
+        self.subscription_id = None
+
     def test_create_lesson(self):
         """Создание урока"""
 
@@ -225,7 +227,7 @@ class SchoolTestCase(APITestCase):
             'is_active': True
         }
         response_create = self.client.post(
-            reverse("school:subscription_create_destroy", kwargs={'pk': 1}),
+            reverse("school:subscription_create_destroy") + f'?pk={1}',
             data=data_create,
             format='json'
         )
@@ -246,9 +248,8 @@ class SchoolTestCase(APITestCase):
         )
 
         # Удаление подписки
-        subscription_id = response_create.json()['pk']
         response_destroy = self.client.delete(
-            reverse("school:subscription_create_destroy", kwargs={'pk': subscription_id}),
+            reverse("school:subscription_create_destroy") + f'?pk={self.subscription_id}',
             format='json'
         )
 
