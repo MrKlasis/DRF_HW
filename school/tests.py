@@ -210,50 +210,46 @@ class SchoolTestCase(APITestCase):
         )
 
     def test_create_and_destroy_subscription(self):
-        """Создание и удаление подписки"""
-
-        self.client.force_authenticate(user=self.user_1)
-
         course = Course.objects.create(
             title='title',
             owner=self.user_1
         )
 
+        self.client.force_authenticate(user=self.user_1)
+
         # Создание подписки
         data_create = {
-            'action': 'create',
-            'user': self.user_1.id,
-            'course': course.id,
-            'is_active': True
+            'course_id': course.id,
         }
         response_create = self.client.post(
-            reverse("school:subscription_create_destroy") + f'?pk={1}',
+            reverse("school:subscription-create"),
             data=data_create,
             format='json'
         )
 
-        self.assertEquals(
+        self.assertEqual(
             response_create.status_code,
-            status.HTTP_201_CREATED
+            status.HTTP_200_OK  # Можете изменить на status.HTTP_201_CREATED, в зависимости от вашей логики
         )
 
-        self.assertEquals(
+        self.assertEqual(
             response_create.json(),
-            {
-                'pk': 1,
-                'user': self.user_1.id,
-                'course': course.id,
-                'is_active': True
-            }
+            {"message": "Подписка добавлена"}
         )
 
         # Удаление подписки
-        response_destroy = self.client.delete(
-            reverse("school:subscription_create_destroy") + f'?pk={self.subscription_id}',
+        response_destroy = self.client.post(
+            reverse("school:subscription-create"),
+            data=data_create,
             format='json'
         )
 
-        self.assertEquals(
+        self.assertEqual(
             response_destroy.status_code,
-            status.HTTP_204_NO_CONTENT
+            status.HTTP_200_OK  # Можете изменить на status.HTTP_204_NO_CONTENT, в зависимости от вашей логики
+        )
+
+        self.assertEqual(
+            response_destroy.json(),
+            {"message": "Подписка удалена"}
         )
