@@ -11,3 +11,4 @@ def user_login_per_month():
     print(users_invalid)
     for user in users_invalid:
         user.is_active = False
+        user.save()
