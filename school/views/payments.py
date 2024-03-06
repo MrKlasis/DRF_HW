@@ -38,7 +38,6 @@ class PaymentCreateAPIView(CreateAPIView):
             new_pay.course = course
             course.stripe_product_id = prod_id
             course.save()
-            serializer.validated_data['sessions_url'] = session_url
         elif lesson_id:
             lesson = get_object_or_404(Lesson, id=lesson_id)
             new_pay.pay = lesson.price
@@ -50,7 +49,7 @@ class PaymentCreateAPIView(CreateAPIView):
             new_pay.lesson = lesson
             lesson.stripe_product_id = prod_id
             lesson.save()
-            serializer.validated_data['sessions_url'] = session_url
+
         new_pay.save()
 
 

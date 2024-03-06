@@ -1,13 +1,11 @@
 from rest_framework import serializers
 
-from school.models import Payments
-from school.seriallizers.course import CourseSerializer
-from school.seriallizers.lesson import LessonSerializer
+from school.models import Payments, Course, Lesson
 
 
 class PaymentsSerializer(serializers.ModelSerializer):
-    course = CourseSerializer()
-    lesson = LessonSerializer()
+    course = serializers.PrimaryKeyRelatedField(queryset=Course.objects.all(), required=False)
+    lesson = serializers.PrimaryKeyRelatedField(queryset=Lesson.objects.all(), required=False)
 
     class Meta:
         model = Payments
