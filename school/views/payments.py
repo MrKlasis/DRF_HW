@@ -15,10 +15,10 @@ class PaymentCreateAPIView(CreateAPIView):
     serializer_class = PaymentsSerializer
     permission_classes = [IsAuthenticated]
 
-    @staticmethod
-    def extract_session_id(session_url):
-        parts = session_url.split('/')
-        return parts[-1] if parts else None
+    # @staticmethod
+    # def extract_session_id(session_url):
+    #     parts = session_url.split('/')
+    #     return parts[-1] if parts else None
 
     def perform_create(self, serializer):
         new_pay = serializer.save()
@@ -28,24 +28,26 @@ class PaymentCreateAPIView(CreateAPIView):
         lesson_id = self.request.data.get('lesson')
 
         if course_id:
+            course_id = int(course_id)
             course = get_object_or_404(Course, id=course_id)
             new_pay.pay = course.price
             prod_id = product_create_stripe(course.title)
             price_id = price_create_stripe(prod_id, new_pay.pay)
-            session_url = session_create_stripe(price_id)
+            session_id, session_url = session_create_stripe(price_id)
             new_pay.sessions_url = session_url
-            new_pay.stripe_session_id = PaymentCreateAPIView.extract_session_id(session_url)
+            new_pay.stripe_session_id = session_id
             new_pay.course = course
             course.stripe_product_id = prod_id
             course.save()
         elif lesson_id:
+            lesson_id = int(lesson_id)
             lesson = get_object_or_404(Lesson, id=lesson_id)
             new_pay.pay = lesson.price
             prod_id = product_create_stripe(lesson.title)
             price_id = price_create_stripe(prod_id, new_pay.pay)
-            session_url = session_create_stripe(price_id)
+            session_id, session_url = session_create_stripe(price_id)
             new_pay.sessions_url = session_url
-            new_pay.stripe_session_id = PaymentCreateAPIView.extract_session_id(session_url)
+            new_pay.stripe_session_id = session_id
             new_pay.lesson = lesson
             lesson.stripe_product_id = prod_id
             lesson.save()

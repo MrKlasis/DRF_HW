@@ -29,7 +29,7 @@ def session_create_stripe(prod_price, count=1, success_url="https://example.com/
         line_items=[{"price": prod_price, "quantity": count}],
         mode="payment",
     )
-    return response
+    return response['id'], response['url']
 
 
 # product_name = "Course"

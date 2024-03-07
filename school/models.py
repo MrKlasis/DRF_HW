@@ -6,6 +6,7 @@ from users.models import NULLABLE
 
 
 class Course(models.Model):
+    id = models.IntegerField(primary_key=True)
     title = models.CharField(max_length=150, verbose_name='название')
     img = models.ImageField(upload_to='course/', **NULLABLE, verbose_name='превью')
     description = models.TextField(**NULLABLE, verbose_name='Описание')
